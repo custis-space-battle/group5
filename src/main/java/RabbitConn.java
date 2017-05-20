@@ -23,7 +23,7 @@ public class RabbitConn {
     public static Point lastPoint;
     public static Point firstPoint;
 
-    public static final long mills = 1500;
+    public static final long mills = 3000;
 
     public static void connect() throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -198,29 +198,30 @@ public class RabbitConn {
             new Thread(() -> {
                 try {
                     Thread.sleep(1500);
-                    sendMessage("1,1;");
-                    System.out.println("1,1;");
+                    sendMessage(Main.generateString());
+                    System.out.println(Main.generateString());
 
                     Thread.sleep(5000);
                     sendMessage("1,1");
                     System.out.println("1,1");
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }).start();
         }
 
-//        if (msg.contains("winner")) {
-//            new Thread(() -> {
-//                try {
-//                    Thread.sleep(1500);
-//                    sendMessage("start:bot");
-//                    System.out.println("start:bot");
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
-//        }
+        if (msg.contains(" You must send")) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1500);
+                    sendMessage("start:usual");
+                    System.out.println("start:usual");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
     }
 
 }

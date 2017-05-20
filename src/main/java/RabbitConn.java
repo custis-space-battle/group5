@@ -60,47 +60,48 @@ public class RabbitConn {
         channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
     }
 
+    public static void startStartRandomHit() {
+
+    }
+
     public static void parseMsg(String msg) throws InterruptedException, IOException {
         if (msg.contains("fire result: HIT:")) {
             needKill = true;
-            Thread thread = new Thread() {
-                public void run() {
-                    try {
-                        Pattern pattern = Pattern.compile("(\\d+),(\\d+)");
-                        Matcher matcher = pattern.matcher(msg);
-                        Point point = null;
-                        if (matcher.find()) {
-                            point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+            Thread thread = new Thread(() -> {
+                try {
+                    Pattern pattern = Pattern.compile("(\\d+),(\\d+)");
+                    Matcher matcher = pattern.matcher(msg);
+                    Point point = null;
+                    if (matcher.find()) {
+                        point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                    }
+                    Thread.sleep(mills);
+                    Point hitted = Main.hitIfHitted(point);
+                    if (ship.size() > 0){
+                        ship.add(point);
+                        if (firstPoint.getX() == point.getX()){
+                            target = 'x';
+                        } else{
+                            target = 'y';
                         }
-                        Thread.sleep(mills);
-                        Point hitted = Main.hitIfHitted(point);
-                        System.out.println(hitted.toString());
-                        if (ship.size() > 0){
-                            ship.add(point);
-                            if (firstPoint.getX() == point.getX()){
-                                target = 'x';
-                            } else{
-                                target = 'y';
-                            }
-                        } else {
-                            ship.add(point);
-                        }
+                    } else {
+                        ship.add(point);
+                    }
 //                        Main.hashSet.add(point);
-                        if (firstPoint == null) {
-                            firstPoint = point;
-                        }
-                        if (hitted == null) {
-                            hitted = Main.hitIfHitted(firstPoint);
-                        }
-                        sendMessage(hitted.toString());
-                        lastPoint = point;
+                    if (firstPoint == null) {
+                        firstPoint = point;
+                    }
+                    if (hitted == null) {
+                        hitted = Main.hitIfHitted(firstPoint);
+                    }
+                    sendMessage(hitted.toString());
+                    lastPoint = point;
 
 //                        System.out.println("point to HIT: " + hitted);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            };
+            });
             thread.start();
         }
 
@@ -192,10 +193,16 @@ public class RabbitConn {
             }).start();
         }
 
-//        if (msg.contains("winner:"))
-//        {
-//            sendMessage("start:usual");
-//        }
+        if (msg.contains("winner:")) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                    sendMessage("start:bot");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
     }
 
 }

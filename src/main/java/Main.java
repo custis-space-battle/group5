@@ -10,6 +10,21 @@ public class Main {
 
     public static HashSet<String> hashSet = new HashSet<>();
 
+    public static void prepareHashSet() {
+        hashSet.add("1,1");
+        for (int i = 0; i <= 11; i++) {
+            hashSet.add(i + "," + 0);
+            hashSet.add(i + "," + 11);
+            hashSet.add(0 + "," + i);
+            hashSet.add(11 + "," + i);
+        }
+    }
+    public static String generateString() {
+        String str = "4,1;";
+
+
+        return str;
+    }
     public static Point hit() {
         String str = null;
         do {
@@ -85,14 +100,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        hashSet.add("1,1");
-        for (int i = 0; i <= 11; i++) {
-            hashSet.add(i + "," + 0);
-            hashSet.add(i + "," + 11);
-            hashSet.add(0 + "," + i);
-            hashSet.add(11 + "," + i);
-        }
 
+        prepareHashSet();
 
         RabbitConn.connect();
 

@@ -122,7 +122,6 @@ public class RabbitConn {
                             if (hitted == null) {
                                 hitted = Main.hitIfHitted(firstPoint);
                             }
-                            System.out.println(hitted.toString());
                             sendMessage(hitted.toString());
                             System.out.println("HITTIN POINT" + hitted);
                         } catch (Exception e) {
@@ -193,16 +192,35 @@ public class RabbitConn {
             }).start();
         }
 
-        if (msg.contains("winner:")) {
+        if (msg.contains("prepare!")) {
+            Main.hashSet.clear();
+            Main.prepareHashSet();
             new Thread(() -> {
                 try {
+                    Thread.sleep(1500);
+                    sendMessage("1,1;");
+                    System.out.println("1,1;");
+
                     Thread.sleep(5000);
-                    sendMessage("start:bot");
+                    sendMessage("1,1");
+                    System.out.println("1,1");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }).start();
         }
+
+//        if (msg.contains("winner")) {
+//            new Thread(() -> {
+//                try {
+//                    Thread.sleep(1500);
+//                    sendMessage("start:bot");
+//                    System.out.println("start:bot");
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }).start();
+//        }
     }
 
 }

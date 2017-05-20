@@ -46,7 +46,6 @@ public class Main {
                     for (int i = 0; i < 10; i++) {
                         hit();
                     }
-                    System.out.println(hashSet);
                 }
                 RabbitConn.sendMessage(temp);
             }

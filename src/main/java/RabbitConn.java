@@ -20,6 +20,7 @@ public class RabbitConn {
 
     public static final HashSet<Point> ship = new HashSet<>();
     public static Point lastPoint;
+    public static Point firstPoint;
 
     public static final long mills = 3000;
 
@@ -75,6 +76,9 @@ public class RabbitConn {
                         System.out.println(hitted.toString());
                         ship.add(point);
 //                        Main.hashSet.add(point);
+                        if (firstPoint == null){
+                            firstPoint = point;
+                        }
                         lastPoint = point;
                         sendMessage(hitted.toString());
 //                        System.out.println("point to HIT: " + hitted);
@@ -100,6 +104,9 @@ public class RabbitConn {
                             }
                             Thread.sleep(mills);
                             Point hitted = Main.hitIfHitted(lastPoint);
+                            if (hitted == null){
+                                hitted = Main.hitIfHitted(firstPoint);
+                            }
                             System.out.println(hitted.toString());
                             sendMessage(hitted.toString());
                             System.out.println("HITTIN POINT" + hitted);
@@ -141,6 +148,7 @@ public class RabbitConn {
                     Main.hashSet.add(sheepPoint.getX() + "," + y_1);
                 }
                 ship.clear();
+                firstPoint = null;
 
                 new Thread(() -> {
                     try {

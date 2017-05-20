@@ -41,7 +41,7 @@ public class Main {
             System.out.println("returned point4 " + new Point((point.getX()), point.getY()-1));
             return new Point((point.getX()), point.getY()-1);
         }
-        return hit();
+        return null;
     }
 
 

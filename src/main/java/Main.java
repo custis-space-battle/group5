@@ -14,7 +14,8 @@ public class Main {
         String str = null;
         do {
             str = randomCoordinate();
-        } while (hashSet.contains(str) && hashSet.size() != 144);
+        } while (hashSet.contains(str) && hashSet.size() != 148);
+        System.out.println("SIZE: " + hashSet.size());
         hashSet.add(str);
         return new Point(str.split(",")); //todo лол )
     }

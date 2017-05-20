@@ -22,7 +22,7 @@ public class RabbitConn {
     public static Point lastPoint;
     public static Point firstPoint;
 
-    public static final long mills = 3000;
+    public static final long mills = 1500;
 
     public static void connect() throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -79,8 +79,12 @@ public class RabbitConn {
                         if (firstPoint == null) {
                             firstPoint = point;
                         }
-                        lastPoint = point;
+                        if (hitted == null) {
+                            hitted = Main.hitIfHitted(firstPoint);
+                        }
                         sendMessage(hitted.toString());
+                        lastPoint = point;
+
 //                        System.out.println("point to HIT: " + hitted);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -149,22 +153,38 @@ public class RabbitConn {
                 }
                 ship.clear();
                 firstPoint = null;
-
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(mills);
-                        String hit = Main.hit().toString();
-                        System.out.println(hit);
-                        sendMessage(hit);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }).start();
             }
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(mills);
+                    String hit = Main.hit().toString();
+                    System.out.println(hit);
+                    sendMessage(hit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
         }
-        if (msg.contains("winner:")) {
-            sendMessage("start:usual");
+
+        if (msg.contains("fire result: HIT_MINE")) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(mills);
+                    String hit = Main.hit().toString();
+                    System.out.println(hit);
+                    sendMessage(hit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
+
+//        if (msg.contains("winner:"))
+//        {
+//            sendMessage("start:usual");
+//        }
     }
 
 }

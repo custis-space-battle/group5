@@ -20,9 +20,7 @@ public class Main {
         }
     }
     public static String generateString() {
-        String str = "4,1;";
-
-
+        String str = "3,1;10,1;1,2;1,4;1,10;2,10;9,10;10,10;10,3;10,4;1,6;1,7;1,8;10,6;10,7;10,8;4,10;5,10;6,10;7,10;";
         return str;
     }
     public static Point hit() {

@@ -31,7 +31,11 @@ public class RabbitConn {
                     throws IOException {
                 String message = new String(body, "UTF-8");
                 System.out.println(" [x] Received '" + message + "'");
-                parseMsg(message);
+                try {
+                    parseMsg(message);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -43,13 +47,14 @@ public class RabbitConn {
         channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
     }
 
-    public static void parseMsg(String msg) {
+    public static void parseMsg(String msg) throws InterruptedException {
 
         if (msg.contains("fire result: HIT:")) {
             System.out.println("HIT SUKA"); //Received 'fire result: HIT: 1,3'
         }
         if (msg.contains("fire result: MISS:")) {
-            System.out.println("MISS SUKA");
+            Thread.sleep(100000);
+            System.out.println(Main.hit().toString());
         }
         if (msg.contains("fire result: KILL")) {
             System.out.println("KILL SUKA");

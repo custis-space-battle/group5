@@ -10,7 +10,7 @@ public class Main {
 
     public static HashSet<String> hashSet = new HashSet<>();
 
-    public static String hit() {
+    public static Point hit() {
 
         String str = null;
         do {
@@ -18,14 +18,15 @@ public class Main {
         } while (hashSet.contains(str) && hashSet.size() != 100);
 
         hashSet.add(str);
-        return str;
+        return new Point(str.split(";")); //todo лол )
+
     }
 
     private static String randomCoordinate() {
         Random random = new Random();
         int x = random.nextInt(10) + 1;
         int y = random.nextInt(10) + 1;
-        return x + "," + y;
+        return x + ";" + y; //todo не оч хорошо :)
     }
 
     public static void main(String[] args) throws Exception {
@@ -41,7 +42,7 @@ public class Main {
             } else {
                 if (temp.contains("fire")) {
                     for (int i = 0; i < 10; i++) {
-                        hit();
+                        System.out.println(hit());
                     }
                 }
                 RabbitConn.sendMessage(temp);

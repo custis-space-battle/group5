@@ -14,29 +14,34 @@ public class Main {
         String str = null;
         do {
             str = randomCoordinate();
-        } while (hashSet.contains(str) && hashSet.size() != 100);
+        } while (hashSet.contains(str) && hashSet.size() != 144);
         hashSet.add(str);
-        return new Point(str.split(";")); //todo лол )
+        return new Point(str.split(",")); //todo лол )
     }
 
     public static Point hitIfHitted(Point point) {
+        System.out.println("input point" + point);
         if (!hashSet.contains((point.getX() - 1) + "," + point.getY())) {
             hashSet.add((point.getX() - 1) + "," + point.getY());
+            System.out.println("returned point1" + new Point(point.getX() - 1, point.getY()));
             return new Point(point.getX() - 1, point.getY());
 
         } else if ((!hashSet.contains(point.getX() + "," + (point.getY() + 1)))) {
             hashSet.add((point.getX() + "," + (point.getY() + 1)));
+            System.out.println("returned point2 " + new Point(point.getX(), point.getY()+1));
             return new Point(point.getX(), point.getY()+1);
 
         } else if ((!hashSet.contains(point.getX() +1 + "," + point.getY()))) {
             hashSet.add(point.getX() +1 + "," + point.getY());
+            System.out.println("returned point3 "+ new Point((point.getX() + 1), point.getY()));
             return new Point((point.getX() + 1), point.getY());
 
         } else if ((!hashSet.contains(point.getX() + "," + (point.getY() -1)))) {
             hashSet.add((point.getX() + "," + (point.getY() -1)));
+            System.out.println("returned point4 " + new Point((point.getX()), point.getY()-1));
             return new Point((point.getX()), point.getY()-1);
         }
-        return null;
+        return hit();
     }
 
 
@@ -44,13 +49,13 @@ public class Main {
         Random random = new Random();
         int x = random.nextInt(10) + 1;
         int y = random.nextInt(10) + 1;
-        return x + ";" + y; //todo не оч хорошо :)
+        return x + "," + y; //todo не оч хорошо :)
     }
 
     public static void main(String[] args) throws Exception {
 
         hashSet.add("1,1");
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i <= 11; i++) {
             hashSet.add(i + "," + 0);
             hashSet.add(i + "," + 11);
             hashSet.add(0 + "," + i);

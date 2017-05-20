@@ -18,7 +18,10 @@ public class RabbitConn {
 
     private static boolean needKill = false;
 
-    public static HashSet<Point> ship = new HashSet<>();
+    public static final HashSet<Point> ship = new HashSet<>();
+    public static Point lastPoint;
+
+    public static final long mills = 3000;
 
     public static void connect() throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -61,20 +64,20 @@ public class RabbitConn {
             Thread thread = new Thread() {
                 public void run() {
                     try {
-                        Pattern pattern = Pattern.compile("(\\d),(\\d)");
+                        Pattern pattern = Pattern.compile("(\\d+),(\\d+)");
                         Matcher matcher = pattern.matcher(msg);
                         Point point = null;
                         if (matcher.find()) {
                             point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
                         }
-                        Thread.sleep(5000);
+                        Thread.sleep(mills);
                         Point hitted = Main.hitIfHitted(point);
                         System.out.println(hitted.toString());
-                        if (msg.contains("fire result: HIT_AGAIN:")){
-                            ship.add(hitted);
-                        }
+                        ship.add(point);
+//                        Main.hashSet.add(point);
+                        lastPoint = point;
                         sendMessage(hitted.toString());
-//                        System.out.println("point to HIT: " + point);
+//                        System.out.println("point to HIT: " + hitted);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -84,22 +87,22 @@ public class RabbitConn {
         }
 
 
-
         if (msg.contains("fire result: MISS:")) {
             if (needKill) {
                 Thread thread = new Thread() {
                     public void run() {
                         try {
-                            Pattern pattern = Pattern.compile("(\\d),(\\d)");
+                            Pattern pattern = Pattern.compile("(\\d+),(\\d+)");
                             Matcher matcher = pattern.matcher(msg);
                             Point point = null;
                             if (matcher.find()) {
                                 point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
                             }
-                            Thread.sleep(5000);
-                            Point hitted = Main.hitIfHitted(point);
+                            Thread.sleep(mills);
+                            Point hitted = Main.hitIfHitted(lastPoint);
                             System.out.println(hitted.toString());
-                            sendMessage(point.toString());
+                            sendMessage(hitted.toString());
+                            System.out.println("HITTIN POINT" + hitted);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -109,7 +112,7 @@ public class RabbitConn {
             } else {
                 new Thread(() -> {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(mills);
                         String hit = Main.hit().toString();
                         System.out.println(hit);
                         sendMessage(hit);
@@ -122,20 +125,33 @@ public class RabbitConn {
 
         if (msg.contains("fire result: KILL")) {
             needKill = false;
-            for (Point sheepPoint : ship) {
-                int x1 = sheepPoint.getX() + 1;
-                int x_1 = sheepPoint.getX() - 1;
-                int y1 = sheepPoint.getY() + 1;
-                int y_1 = sheepPoint.getY() - 1;
-                Main.hashSet.add(x1 + "," + sheepPoint.getY());
-                Main.hashSet.add(x1 + "," + y1);
-                Main.hashSet.add(x1 + "," + y_1);
-                Main.hashSet.add(x_1 + "," + sheepPoint.getY());
-                Main.hashSet.add(x_1 + "," + y1);
-                Main.hashSet.add(x_1 + "," + y_1);
-                Main.hashSet.add(sheepPoint.getX() + "," + y1);
-                Main.hashSet.add(sheepPoint.getX() + "," + y_1);
+            if (ship.size() != 0) {
+                for (Point sheepPoint : ship) {
+                    int x1 = sheepPoint.getX() + 1;
+                    int x_1 = sheepPoint.getX() - 1;
+                    int y1 = sheepPoint.getY() + 1;
+                    int y_1 = sheepPoint.getY() - 1;
+                    Main.hashSet.add(x1 + "," + sheepPoint.getY());
+                    Main.hashSet.add(x1 + "," + y1);
+                    Main.hashSet.add(x1 + "," + y_1);
+                    Main.hashSet.add(x_1 + "," + sheepPoint.getY());
+                    Main.hashSet.add(x_1 + "," + y1);
+                    Main.hashSet.add(x_1 + "," + y_1);
+                    Main.hashSet.add(sheepPoint.getX() + "," + y1);
+                    Main.hashSet.add(sheepPoint.getX() + "," + y_1);
+                }
                 ship.clear();
+
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(mills);
+                        String hit = Main.hit().toString();
+                        System.out.println(hit);
+                        sendMessage(hit);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
             }
         }
     }

@@ -8,6 +8,7 @@ import java.io.IOException;
 public class RabbitConn {
 
     private final static String QUEUE = "group5";
+    private final static String TO_QUEUE = "to_group5";
 
     public static void connect() throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -18,6 +19,8 @@ public class RabbitConn {
         channel.queueDeclare(QUEUE, false, false, true, null);
         channel.queueBind(QUEUE, QUEUE, QUEUE);
 
+        channel.queueDeclare(TO_QUEUE, false, false, true, null);
+        channel.queueBind(TO_QUEUE, TO_QUEUE, TO_QUEUE);
 
         String message = "start:BOT";
         channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
@@ -33,7 +36,7 @@ public class RabbitConn {
             }
         };
 
-        channel.basicConsume("to_group5", true, consumer);
+        channel.basicConsume(TO_QUEUE, true, consumer);
 
     }
 }

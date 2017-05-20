@@ -67,10 +67,12 @@ public class RabbitConn {
                         if (matcher.find()) {
                             point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
                         }
-
                         Thread.sleep(5000);
                         Point hitted = Main.hitIfHitted(point);
                         System.out.println(hitted.toString());
+                        if (msg.contains("fire result: HIT_AGAIN:")){
+                            ship.add(hitted);
+                        }
                         sendMessage(hitted.toString());
 //                        System.out.println("point to HIT: " + point);
                     } catch (Exception e) {
@@ -80,6 +82,8 @@ public class RabbitConn {
             };
             thread.start();
         }
+
+
 
         if (msg.contains("fire result: MISS:")) {
             if (needKill) {

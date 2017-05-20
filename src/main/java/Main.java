@@ -22,22 +22,18 @@ public class Main {
     public static Point hitIfHitted(Point point) {
         if (!hashSet.contains((point.getX() - 1) + "," + point.getY())) {
             hashSet.add((point.getX() - 1) + "," + point.getY());
-            RabbitConn.ship.add(new Point((point.getX() - 1), point.getY()));
             return new Point(point.getX() - 1, point.getY());
 
         } else if ((!hashSet.contains(point.getX() + "," + (point.getY() + 1)))) {
             hashSet.add((point.getX() + "," + (point.getY() + 1)));
-            RabbitConn.ship.add(new Point((point.getX() ), point.getY()+1));
             return new Point(point.getX(), point.getY()+1);
 
         } else if ((!hashSet.contains(point.getX() +1 + "," + point.getY()))) {
             hashSet.add(point.getX() +1 + "," + point.getY());
-            RabbitConn.ship.add(new Point((point.getX() +1), point.getY()));
             return new Point((point.getX() + 1), point.getY());
 
         } else if ((!hashSet.contains(point.getX() + "," + (point.getY() -1)))) {
             hashSet.add((point.getX() + "," + (point.getY() -1)));
-            RabbitConn.ship.add(new Point((point.getX()), point.getY()-1));
             return new Point((point.getX()), point.getY()-1);
         }
         return null;

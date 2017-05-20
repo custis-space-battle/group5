@@ -76,7 +76,7 @@ public class RabbitConn {
                         System.out.println(hitted.toString());
                         ship.add(point);
 //                        Main.hashSet.add(point);
-                        if (firstPoint == null){
+                        if (firstPoint == null) {
                             firstPoint = point;
                         }
                         lastPoint = point;
@@ -104,7 +104,7 @@ public class RabbitConn {
                             }
                             Thread.sleep(mills);
                             Point hitted = Main.hitIfHitted(lastPoint);
-                            if (hitted == null){
+                            if (hitted == null) {
                                 hitted = Main.hitIfHitted(firstPoint);
                             }
                             System.out.println(hitted.toString());
@@ -162,7 +162,9 @@ public class RabbitConn {
                 }).start();
             }
         }
+        if (msg.contains("winner:")) {
+            sendMessage("start:usual");
+        }
     }
-
 
 }

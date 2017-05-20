@@ -1,6 +1,8 @@
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Участник on 20.05.2017.
@@ -50,11 +52,27 @@ public class RabbitConn {
     public static void parseMsg(String msg) throws InterruptedException, IOException {
 
         if (msg.contains("fire result: HIT:")) {
-            System.out.println("HIT SUKA"); //Received 'fire result: HIT: 1,3'
+            Pattern pattern = Pattern.compile("(\\d),(\\d)");
+            Matcher matcher = pattern.matcher(msg);
+            if(matcher.find()) {
+                Point p = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                System.out.println(p);
+            }
+
+//            new Thread(() -> {
+//                try {
+//                    Thread.sleep(5000);
+////                    String hit = // метод
+////                    System.out.println(hit);
+////                    sendMessage(hit);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }).start();
         }
 
         if (msg.contains("fire result: MISS:")) {
-            Thread thread = new Thread(() -> {
+            new Thread(() -> {
                 try {
                     Thread.sleep(5000);
                     String hit = Main.hit().toString();
@@ -63,8 +81,7 @@ public class RabbitConn {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            });
-            thread.start();
+            }).start();
         }
 
         if (msg.contains("fire result: KILL")) {

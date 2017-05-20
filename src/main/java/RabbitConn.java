@@ -1,11 +1,14 @@
 import com.rabbitmq.client.*;
 
+import javax.swing.event.ChangeEvent;
 import java.io.IOException;
 
 /**
  * Created by Участник on 20.05.2017.
  */
 public class RabbitConn {
+
+    private static Channel channel;
 
     private final static String QUEUE = "group5";
     private final static String TO_QUEUE = "to_group5";
@@ -15,16 +18,12 @@ public class RabbitConn {
         factory.setUri("amqp://group5:iJ6QFl@91.241.45.69/debug");
         Connection conn = factory.newConnection();
 
-        Channel channel = conn.createChannel();
+        channel = conn.createChannel();
         channel.queueDeclare(QUEUE, false, false, true, null);
         channel.queueBind(QUEUE, QUEUE, QUEUE);
 
         channel.queueDeclare(TO_QUEUE, false, false, true, null);
         channel.queueBind(TO_QUEUE, TO_QUEUE, TO_QUEUE);
-
-        String message = "start:BOT";
-        channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
-        System.out.println(" [x] Sent '" + message + "'");
 
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
@@ -38,5 +37,9 @@ public class RabbitConn {
 
         channel.basicConsume(TO_QUEUE, true, consumer);
 
+    }
+
+    public static void sendMessage(String message) throws IOException {
+        channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
     }
 }

@@ -6,6 +6,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         RabbitConn.connect();
-
+        RabbitConn.sendMessage("start:bot");
     }
 }

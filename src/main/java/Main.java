@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -7,18 +9,27 @@ import java.util.Random;
  */
 public class Main {
 
+    public static HashSet<String> hashSet = new HashSet<>();
+
     public static String hit() {
 
-        Random random = new Random();
-        int x = random.nextInt(10) + 1;
-        int y = random.nextInt(10) + 1;
+        String str = null;
+        do {
+            str = randomCoordinate();
+        } while (hashSet.contains(str) && hashSet.size() != 100);
 
-
-        System.out.println(x + " " + y);
-
-        return null;
-
+        hashSet.add(str);
+        return str;
     }
+
+    private static String randomCoordinate() {
+        Random random = new Random();
+        int x = random.nextInt(2) + 1;
+        int y = random.nextInt(2) + 1;
+        return x + "," + y;
+    }
+
+
 
     public static void main(String[] args) throws Exception {
 
@@ -32,7 +43,10 @@ public class Main {
                 break;
             } else {
                 if (temp.contains("fire")) {
-                    while (true) hit();
+                    for (int i = 0; i < 10; i++) {
+                        hit();
+                    }
+                    System.out.println(hashSet);
                 }
                 RabbitConn.sendMessage(temp);
             }

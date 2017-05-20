@@ -8,8 +8,7 @@ public class Ship {
     boolean isDead = false;
 
     private Set<Point> shipPointSet = new HashSet();
-    public Ship(Point firstPoint){
-        shipPointSet.add(firstPoint);
+    public Ship(){
     }
 
     public Set<Point> getShipPointSet() {

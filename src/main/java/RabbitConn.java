@@ -1,6 +1,8 @@
 import com.rabbitmq.client.*;
+import org.omg.PortableServer.POA;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +15,10 @@ public class RabbitConn {
 
     private final static String QUEUE = "group5";
     private final static String TO_QUEUE = "to_group5";
+
+    private static boolean needKill = false;
+
+    public static HashSet<Point> ship = new HashSet<>();
 
     public static void connect() throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -50,48 +56,73 @@ public class RabbitConn {
     }
 
     public static void parseMsg(String msg) throws InterruptedException, IOException {
-
         if (msg.contains("fire result: HIT:")) {
-            Pattern pattern = Pattern.compile("(\\d),(\\d)");
-            Matcher matcher = pattern.matcher(msg);
-            if(matcher.find()) {
-                Point p = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
-                System.out.println(p);
-            }
+            needKill = true;
+            Thread thread = new Thread() {
+                public void run() {
+                    try {
+                        Pattern pattern = Pattern.compile("(\\d),(\\d)");
+                        Matcher matcher = pattern.matcher(msg);
+                        Point point = null;
+                        if (matcher.find()) {
+                            point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                        }
 
-//            new Thread(() -> {
-//                try {
-//                    Thread.sleep(5000);
-////                    String hit = // метод
-////                    System.out.println(hit);
-////                    sendMessage(hit);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }).start();
+                        Thread.sleep(5000);
+                        Point hitted = Main.hitIfHitted(point);
+                        System.out.println(hitted.toString());
+                        sendMessage(hitted.toString());
+//                        System.out.println("point to HIT: " + point);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            thread.start();
         }
 
         if (msg.contains("fire result: MISS:")) {
-            new Thread(() -> {
-                try {
-                    Thread.sleep(5000);
-                    String hit = Main.hit().toString();
-                    System.out.println(hit);
-                    sendMessage(hit);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            if (needKill) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        try {
+                            Pattern pattern = Pattern.compile("(\\d),(\\d)");
+                            Matcher matcher = pattern.matcher(msg);
+                            Point point = null;
+                            if (matcher.find()) {
+                                point = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                            }
+                            Thread.sleep(5000);
+                            Point hitted = Main.hitIfHitted(point);
+                            System.out.println(hitted.toString());
+                            sendMessage(point.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                thread.start();
+            } else {
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(5000);
+                        String hit = Main.hit().toString();
+                        System.out.println(hit);
+                        sendMessage(hit);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
         }
 
         if (msg.contains("fire result: KILL")) {
-            System.out.println("KILL SUKA");
-            Ship ship = new Ship(new Point(1,1)); //todo взять реальный корабль
-            for (Point sheepPoint : ship.getShipPointSet()){
-                int x1 = sheepPoint.getX()+1;
-                int x_1 = sheepPoint.getX()-1;
-                int y1 = sheepPoint.getY()+1;
-                int y_1 = sheepPoint.getY()-1;
+            needKill = false;
+            for (Point sheepPoint : ship) {
+                int x1 = sheepPoint.getX() + 1;
+                int x_1 = sheepPoint.getX() - 1;
+                int y1 = sheepPoint.getY() + 1;
+                int y_1 = sheepPoint.getY() - 1;
                 Main.hashSet.add(x1 + "," + sheepPoint.getY());
                 Main.hashSet.add(x1 + "," + y1);
                 Main.hashSet.add(x1 + "," + y_1);
@@ -100,6 +131,7 @@ public class RabbitConn {
                 Main.hashSet.add(x_1 + "," + y_1);
                 Main.hashSet.add(sheepPoint.getX() + "," + y1);
                 Main.hashSet.add(sheepPoint.getX() + "," + y_1);
+                ship.clear();
             }
         }
     }

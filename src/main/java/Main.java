@@ -10,7 +10,6 @@ public class Main {
 
     public static HashSet<String> hashSet = new HashSet<>();
 
-
     public static Point hit() {
         String str = null;
         do {
@@ -20,13 +19,28 @@ public class Main {
         return new Point(str.split(";")); //todo лол )
     }
 
-    public static Point hitIfHitted() {
-        String str = null;
-        do {
-            str = randomCoordinate();
-        } while (hashSet.contains(str) && hashSet.size() != 100);
-        hashSet.add(str);
-        return new Point(str.split(";")); //todo лол )
+    public static Point hitIfHitted(Point point) {
+        if (!hashSet.contains((point.getX() - 1) + "," + point.getY())) {
+            hashSet.add((point.getX() - 1) + "," + point.getY());
+            RabbitConn.ship.add(new Point((point.getX() - 1), point.getY()));
+            return new Point(point.getX() - 1, point.getY());
+
+        } else if ((!hashSet.contains(point.getX() + "," + (point.getY() + 1)))) {
+            hashSet.add((point.getX() + "," + (point.getY() + 1)));
+            RabbitConn.ship.add(new Point((point.getX() ), point.getY()+1));
+            return new Point(point.getX(), point.getY()+1);
+
+        } else if ((!hashSet.contains(point.getX() +1 + "," + point.getY()))) {
+            hashSet.add(point.getX() +1 + "," + point.getY());
+            RabbitConn.ship.add(new Point((point.getX() +1), point.getY()));
+            return new Point((point.getX() + 1), point.getY());
+
+        } else if ((!hashSet.contains(point.getX() + "," + (point.getY() -1)))) {
+            hashSet.add((point.getX() + "," + (point.getY() -1)));
+            RabbitConn.ship.add(new Point((point.getX()), point.getY()-1));
+            return new Point((point.getX()), point.getY()-1);
+        }
+        return null;
     }
 
 
@@ -40,6 +54,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         hashSet.add("1,1");
+        for (int i = 0; i < 11; i++) {
+            hashSet.add(i + "," + 0);
+            hashSet.add(i + "," + 11);
+            hashSet.add(0 + "," + i);
+            hashSet.add(11 + "," + i);
+        }
+
+
         RabbitConn.connect();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

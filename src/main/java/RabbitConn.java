@@ -47,15 +47,26 @@ public class RabbitConn {
         channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
     }
 
-    public static void parseMsg(String msg) throws InterruptedException {
+    public static void parseMsg(String msg) throws InterruptedException, IOException {
 
         if (msg.contains("fire result: HIT:")) {
             System.out.println("HIT SUKA"); //Received 'fire result: HIT: 1,3'
         }
+
         if (msg.contains("fire result: MISS:")) {
-            Thread.sleep(100000);
-            System.out.println(Main.hit().toString());
+            Thread thread = new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                    String hit = Main.hit().toString();
+                    System.out.println(hit);
+                    sendMessage(hit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.start();
         }
+
         if (msg.contains("fire result: KILL")) {
             System.out.println("KILL SUKA");
         }

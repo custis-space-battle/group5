@@ -1,6 +1,5 @@
 import com.rabbitmq.client.*;
 
-import javax.swing.event.ChangeEvent;
 import java.io.IOException;
 
 /**
@@ -32,6 +31,7 @@ public class RabbitConn {
                     throws IOException {
                 String message = new String(body, "UTF-8");
                 System.out.println(" [x] Received '" + message + "'");
+                parseMsg(message);
             }
         };
 
@@ -42,4 +42,19 @@ public class RabbitConn {
     public static void sendMessage(String message) throws IOException {
         channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
     }
+
+    public static void parseMsg(String msg) {
+
+        if (msg.contains("fire result: HIT:")) {
+            System.out.println("HIT SUKA"); //Received 'fire result: HIT: 1,3'
+        }
+        if (msg.contains("fire result: MISS:")) {
+            System.out.println("MISS SUKA");
+        }
+        if (msg.contains("fire result: KILL")) {
+            System.out.println("KILL SUKA");
+        }
+    }
+
+
 }

@@ -50,11 +50,20 @@ public class RabbitConn {
     public static void parseMsg(String msg) throws InterruptedException, IOException {
 
         if (msg.contains("fire result: HIT:")) {
-            System.out.println("HIT SUKA"); //Received 'fire result: HIT: 1,3'
+            new Thread(() -> {
+                try {
+                    Thread.sleep(5000);
+                    String hit = // метод
+                    System.out.println(hit);
+                    sendMessage(hit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
 
         if (msg.contains("fire result: MISS:")) {
-            Thread thread = new Thread(() -> {
+            new Thread(() -> {
                 try {
                     Thread.sleep(5000);
                     String hit = Main.hit().toString();
@@ -63,12 +72,12 @@ public class RabbitConn {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            });
-            thread.start();
+            }).start();
+
         }
 
         if (msg.contains("fire result: KILL")) {
-            System.out.println("KILL SUKA");
+            System.out.println("KILL");
         }
     }
 

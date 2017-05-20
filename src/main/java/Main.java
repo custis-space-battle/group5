@@ -11,15 +11,12 @@ public class Main {
     public static HashSet<String> hashSet = new HashSet<>();
 
     public static Point hit() {
-
         String str = null;
         do {
             str = randomCoordinate();
         } while (hashSet.contains(str) && hashSet.size() != 100);
-
         hashSet.add(str);
         return new Point(str.split(";")); //todo лол )
-
     }
 
     private static String randomCoordinate() {

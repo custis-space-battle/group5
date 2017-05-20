@@ -69,6 +69,21 @@ public class RabbitConn {
 
         if (msg.contains("fire result: KILL")) {
             System.out.println("KILL SUKA");
+            Ship ship = new Ship(new Point(1,1)); //todo взять реальный корабль
+            for (Point sheepPoint : ship.getShipPointSet()){
+                int x1 = sheepPoint.getX()+1;
+                int x_1 = sheepPoint.getX()-1;
+                int y1 = sheepPoint.getY()+1;
+                int y_1 = sheepPoint.getY()-1;
+                Main.hashSet.add(x1 + "," + sheepPoint.getY());
+                Main.hashSet.add(x1 + "," + y1);
+                Main.hashSet.add(x1 + "," + y_1);
+                Main.hashSet.add(x_1 + "," + sheepPoint.getY());
+                Main.hashSet.add(x_1 + "," + y1);
+                Main.hashSet.add(x_1 + "," + y_1);
+                Main.hashSet.add(sheepPoint.getX() + "," + y1);
+                Main.hashSet.add(sheepPoint.getX() + "," + y_1);
+            }
         }
     }
 

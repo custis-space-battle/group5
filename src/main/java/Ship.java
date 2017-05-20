@@ -6,9 +6,13 @@ import java.util.Set;
  */
 public class Ship {
     boolean isDead = false;
-    private Set shipPoint = new HashSet();
+
+    private Set<Point> shipPointSet = new HashSet();
     public Ship(Point firstPoint){
-        shipPoint.add(firstPoint);
+        shipPointSet.add(firstPoint);
     }
 
+    public Set<Point> getShipPointSet() {
+        return shipPointSet;
+    }
 }

@@ -10,6 +10,7 @@ public class Main {
 
     public static HashSet<String> hashSet = new HashSet<>();
 
+
     public static Point hit() {
         String str = null;
         do {
@@ -18,6 +19,16 @@ public class Main {
         hashSet.add(str);
         return new Point(str.split(";")); //todo лол )
     }
+
+    public static Point hitIfHitted() {
+        String str = null;
+        do {
+            str = randomCoordinate();
+        } while (hashSet.contains(str) && hashSet.size() != 100);
+        hashSet.add(str);
+        return new Point(str.split(";")); //todo лол )
+    }
+
 
     private static String randomCoordinate() {
         Random random = new Random();
@@ -28,6 +39,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        hashSet.add("1,1");
         RabbitConn.connect();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

@@ -17,6 +17,7 @@ public class RabbitConn {
     private final static String TO_QUEUE = "to_group5";
 
     private static boolean needKill = false;
+    public static Character target;
 
     public static final HashSet<Point> ship = new HashSet<>();
     public static Point lastPoint;
@@ -74,7 +75,16 @@ public class RabbitConn {
                         Thread.sleep(mills);
                         Point hitted = Main.hitIfHitted(point);
                         System.out.println(hitted.toString());
-                        ship.add(point);
+                        if (ship.size() > 0){
+                            ship.add(point);
+                            if (firstPoint.getX() == point.getX()){
+                                target = 'x';
+                            } else{
+                                target = 'y';
+                            }
+                        } else {
+                            ship.add(point);
+                        }
 //                        Main.hashSet.add(point);
                         if (firstPoint == null) {
                             firstPoint = point;
@@ -153,6 +163,7 @@ public class RabbitConn {
                 }
                 ship.clear();
                 firstPoint = null;
+                target = null;
             }
 
             new Thread(() -> {

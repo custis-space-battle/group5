@@ -22,7 +22,35 @@ public class Main {
 
     public static Point hitIfHitted(Point point) {
         System.out.println("input point" + point);
-        if (!hashSet.contains((point.getX() - 1) + "," + point.getY())) {
+
+        if (RabbitConn.target.equals('y') ){
+            if (!hashSet.contains((point.getX() - 1) + "," + point.getY()) ) {
+                hashSet.add((point.getX() - 1) + "," + point.getY());
+                System.out.println("returned point1" + new Point(point.getX() - 1, point.getY()));
+                return new Point(point.getX() - 1, point.getY());
+
+            } else if ((!hashSet.contains(point.getX() +1 + "," + point.getY()))) {
+                hashSet.add(point.getX() +1 + "," + point.getY());
+                System.out.println("returned point3 "+ new Point((point.getX() + 1), point.getY()));
+                return new Point((point.getX() + 1), point.getY());
+
+            }
+        }
+
+        if (RabbitConn.target.equals('x')){
+            if ((!hashSet.contains(point.getX() + "," + (point.getY() + 1)))) {
+                hashSet.add((point.getX() + "," + (point.getY() + 1)));
+                System.out.println("returned point2 " + new Point(point.getX(), point.getY()+1));
+                return new Point(point.getX(), point.getY()+1);
+
+            } else if ((!hashSet.contains(point.getX() + "," + (point.getY() -1)))) {
+                hashSet.add((point.getX() + "," + (point.getY() -1)));
+                System.out.println("returned point4 " + new Point((point.getX()), point.getY()-1));
+                return new Point((point.getX()), point.getY()-1);
+            }
+        }
+
+        if (!hashSet.contains((point.getX() - 1) + "," + point.getY()) ) {
             hashSet.add((point.getX() - 1) + "," + point.getY());
             System.out.println("returned point1" + new Point(point.getX() - 1, point.getY()));
             return new Point(point.getX() - 1, point.getY());

@@ -1,6 +1,6 @@
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.*;
+
+import java.io.IOException;
 
 /**
  * Created by Участник on 20.05.2017.
@@ -19,10 +19,21 @@ public class RabbitConn {
         channel.queueBind(QUEUE, QUEUE, QUEUE);
 
 
-        String message = "start:bot";
+        String message = "start:BOT";
         channel.basicPublish(QUEUE, QUEUE, null, message.getBytes());
         System.out.println(" [x] Sent '" + message + "'");
+
+        Consumer consumer = new DefaultConsumer(channel) {
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope,
+                                       AMQP.BasicProperties properties, byte[] body)
+                    throws IOException {
+                String message = new String(body, "UTF-8");
+                System.out.println(" [x] Received '" + message + "'");
+            }
+        };
+
+        channel.basicConsume("to_group5", true, consumer);
+
     }
-
-
 }

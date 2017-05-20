@@ -24,8 +24,8 @@ public class Main {
 
     private static String randomCoordinate() {
         Random random = new Random();
-        int x = random.nextInt(2) + 1;
-        int y = random.nextInt(2) + 1;
+        int x = random.nextInt(10) + 1;
+        int y = random.nextInt(10) + 1;
         return x + "," + y;
     }
 
@@ -51,7 +51,6 @@ public class Main {
                 RabbitConn.sendMessage(temp);
             }
         }
-
 
         reader.close();
     }
